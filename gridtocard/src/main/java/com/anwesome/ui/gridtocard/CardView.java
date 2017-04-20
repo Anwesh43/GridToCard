@@ -25,7 +25,7 @@ public class CardView extends View {
     }
     public void onDraw(Canvas canvas) {
         if(bitmap!=null) {
-            canvas.drawColor(Color.parseColor("#4DB6AC"));
+            canvas.drawColor(Color.parseColor("#e53935"));
             canvas.save();
             canvas.translate(currX, currY);
             canvas.rotate(deg);

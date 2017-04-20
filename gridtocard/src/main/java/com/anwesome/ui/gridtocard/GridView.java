@@ -48,6 +48,7 @@ public class GridView extends View {
                 }
             }
             screen = new Screen();
+            maxY+=gap;
         }
         canvas.drawColor(Color.parseColor("#FF7043"));
         canvas.save();
