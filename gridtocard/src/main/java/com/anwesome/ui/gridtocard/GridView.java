@@ -17,7 +17,10 @@ public class GridView extends View {
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private List<Bitmap> bitmaps = new ArrayList<>();
     private int color = Color.parseColor("#FF7043");
-    private int w = 100,h = 100;
+    private int w = 100,h = 100,maxY = 0;
+    private float prevY = 0;
+    private boolean isDown = false;
+    private Screen screen;
     private List<GridBitmap> gridBitmaps = new ArrayList<>();
     public GridView(Context context,GridToCard gridToCard) {
         super(context);
@@ -40,14 +43,19 @@ public class GridView extends View {
                 if(i == 3) {
                     x = 3*gap/2;
                     y += 2*gap;
+                    maxY+=2*gap;
                     i = 0;
                 }
             }
+            screen = new Screen();
         }
         canvas.drawColor(Color.parseColor("#FF7043"));
+        canvas.save();
+        canvas.translate(0,screen.y);
         for(GridBitmap gridBitmap:gridBitmaps) {
             gridBitmap.draw(canvas);
         }
+        canvas.restore();
         time++;
     }
     public boolean onTouchEvent(MotionEvent event) {
@@ -55,13 +63,31 @@ public class GridView extends View {
         GridBitmap tappedBitmap = null;
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             for (GridBitmap gridBitmap : gridBitmaps) {
-                if (gridBitmap.handleTap(x, y)) {
+                if (gridBitmap.handleTap(x, y-screen.y)) {
                     tappedBitmap = gridBitmap;
                     break;
                 }
             }
             if(tappedBitmap!=null) {
-                gridToCard.gridToCard(tappedBitmap.getBitmap(),tappedBitmap.center.x,tappedBitmap.center.y,w/2,h/2);
+                gridToCard.gridToCard(tappedBitmap.getBitmap(),tappedBitmap.center.x,tappedBitmap.center.y+screen.y,w/2,h/2);
+            }
+            else if(!isDown){
+                prevY = event.getY();
+                isDown = true;
+                postInvalidate();
+            }
+        }
+        else if(event.getAction() == MotionEvent.ACTION_MOVE) {
+            if(isDown) {
+                screen.updateY(event.getY()-prevY);
+                prevY = event.getY();
+                postInvalidate();
+            }
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP) {
+            if(isDown) {
+                isDown = false;
+                postInvalidate();
             }
         }
         return true;
@@ -97,6 +123,13 @@ public class GridView extends View {
         }
         public int hashCode() {
             return center.hashCode()+bitmap.hashCode();
+        }
+    }
+    private class Screen {
+        private float y = 0;
+        public void updateY(float dir) {
+            if(y+dir>=-maxY+h && y+dir<=0)
+                y+=dir;
         }
     }
 }
