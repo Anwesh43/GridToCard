@@ -49,6 +49,7 @@ public class GridView extends View {
             int w = bitmap.getWidth(),h = bitmap.getHeight();
             canvas.save();
             canvas.translate(center.x,center.y);
+            ca
             canvas.restore();
         }
     }
