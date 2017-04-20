@@ -1,10 +1,7 @@
 package com.anwesome.ui.gridtocard;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.*;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,6 +15,7 @@ public class GridView extends View {
     private int time = 0;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private List<Bitmap> bitmaps = new ArrayList<>();
+    private int color = Color.parseColor("#FF7043");
     private List<GridBitmap> gridBitmaps = new ArrayList<>();
     public GridView(Context context) {
         super(context);
@@ -28,10 +26,21 @@ public class GridView extends View {
     public void onDraw(Canvas canvas) {
         int w = canvas.getWidth(),h = canvas.getHeight();
         if(time == 0) {
-            int gap = w/7,x = 2*gap,y = 2*gap;
+            int gap = w/7,x = 3*gap/2,y = 3*gap/2 ,i = 0;
             for(Bitmap bitmap:bitmaps) {
-                bitmap = Bitmap.createScaledBitmap(bitmap,w/7,w/7,true);
+                GridBitmap gridBitmap = new GridBitmap(Bitmap.createScaledBitmap(bitmap,w/7,w/7,true),x,y);
+                gridBitmaps.add(gridBitmap);
+                i++;
+                x+=2*gap;
+                if(i == 3) {
+                    x = 3*gap/2;
+                    y += 2*gap;
+                }
             }
+        }
+        canvas.drawColor(Color.parseColor("#FF7043"));
+        for(GridBitmap gridBitmap:gridBitmaps) {
+            gridBitmap.draw(canvas);
         }
         time++;
     }
@@ -40,17 +49,32 @@ public class GridView extends View {
     }
     private class GridBitmap {
         private Bitmap bitmap;
+        private int w,h;
         private Point center = new Point();
         public GridBitmap(Bitmap bitmap,int x,int y) {
             this.bitmap = bitmap;
             this.center = new Point(x,y);
+            w = bitmap.getWidth();
+            h = bitmap.getHeight();
         }
         public void draw(Canvas canvas) {
-            int w = bitmap.getWidth(),h = bitmap.getHeight();
             canvas.save();
             canvas.translate(center.x,center.y);
-            ca
+            Path path = new Path();
+            path.addCircle(0,0,w/2, Path.Direction.CCW);
+            canvas.clipPath(path);
+            paint.setStrokeWidth(w/30);
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawPath(path,paint);
+            canvas.drawBitmap(bitmap,-w/2,-h/2,paint);
             canvas.restore();
+        }
+        public boolean handleTap(float x,float y) {
+            return x>=this.center.x - w/2 && x<=this.center.x+w/2 && y>=this.center.y-h/2 && y<=this.center.y+h/2;
+        }
+        public int hashCode() {
+            return center.hashCode()+bitmap.hashCode();
         }
     }
 }
