@@ -17,6 +17,7 @@ public class CardView extends View {
     private float currX,currY,finalX,finalY,scale,deg=0,xSpeed = 0,ySpeed = 0,dir = 1, scaleSpeed=0;
     private float initX,initY,initScale= 0;
     private boolean isAnimated = false;
+    private BackArrow backArrow;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private GridToCard gridToCard;
     public CardView(Context context,GridToCard gridToCard) {
@@ -39,6 +40,9 @@ public class CardView extends View {
             canvas.clipPath(path);
             canvas.drawBitmap(bitmap, -bitmap.getWidth() / 2, -bitmap.getHeight() / 2, paint);
             canvas.restore();
+            if(backArrow!=null) {
+                backArrow.draw(canvas, paint);
+            }
             if (isAnimated) {
                 move();
                 try {
@@ -92,8 +96,35 @@ public class CardView extends View {
         scaleSpeed = (1-scale)/6;
         dir = 1;
         isAnimated = true;
+        backArrow = new BackArrow(w/4,w/8,w/8);
     }
     public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN && backArrow!=null) {
+            backArrow.handleTap(event.getX(),event.getY());
+        }
         return true;
+    }
+    private class BackArrow {
+        private float x,y,w;
+        public BackArrow(float x,float y,float w) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+        }
+        public void draw(Canvas canvas,Paint paint) {
+            paint.setStrokeWidth(w/8);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            canvas.drawLine(x,y,x-w,y,paint);
+            for(int i=0;i<2;i++) {
+                canvas.drawLine(x - w, y, x - w + w / 4, y + (i*2-1)*w / 4, paint);
+            }
+        }
+        public void handleTap(float x,float y) {
+            boolean condition = x>=this.x-w-w/4 && x<=this.x+w/4 && y>=this.y - w/2 && y<=this.y+w/2;
+            if(condition) {
+                gridToCard.cardToGrid();
+            }
+        }
     }
 }
