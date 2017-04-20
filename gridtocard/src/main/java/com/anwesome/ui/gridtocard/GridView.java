@@ -16,7 +16,7 @@ public class GridView extends View {
     private GridToCard gridToCard;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private List<Bitmap> bitmaps = new ArrayList<>();
-    private int color = Color.parseColor("#FF7043");
+    private int color = Color.parseColor("#673AB7");
     private int w = 100,h = 100,maxY = 0;
     private float prevY = 0;
     private boolean isDown = false;

@@ -9,6 +9,7 @@ import android.hardware.display.DisplayManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ScrollView;
 
 /**
@@ -60,6 +61,7 @@ public class GridToCard {
                 android.app.ActionBar actionBar = activity.getActionBar();
                 actionBar.hide();
             }
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             activity.setContentView(gridView);
             isShown = true;
