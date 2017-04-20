@@ -63,8 +63,12 @@ public class CardView extends View {
             ySpeed = 0;
         }
         if(xSpeed== 0 && ySpeed == 0) {
+            float prevDir = dir;
             dir = 0;
             isAnimated = false;
+            if(prevDir == -1) {
+                gridToCard.cardToGrid();
+            }
         }
     }
     public void init(Bitmap bitmap,float cx,float cy,int w,int h) {
