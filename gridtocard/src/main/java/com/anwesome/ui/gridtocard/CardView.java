@@ -18,32 +18,34 @@ public class CardView extends View {
     private float initX,initY,initSx,initSy;
     private boolean isAnimated = false;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    public CardView(Context context,Bitmap bitmap) {
+    private GridToCard gridToCard;
+    public CardView(Context context,GridToCard gridToCard) {
         super(context);
-        this.bitmap = bitmap;
+        this.gridToCard = gridToCard;
     }
     public void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.parseColor("#9900BCD4"));
-        canvas.save();
-        canvas.translate(currX,currY);
-        canvas.rotate(deg);
-        canvas.scale(scaleX,scaleY);
-        paint.setStyle(Paint.Style.STROKE);
-        Path path = new Path();
-        path.addCircle(0,0,bitmap.getWidth()/2, Path.Direction.CCW);
-        paint.setStrokeWidth(bitmap.getWidth()/30);
-        canvas.drawPath(path,paint);
-        canvas.clipPath(path);
-        canvas.drawBitmap(bitmap,-bitmap.getWidth()/2,-bitmap.getHeight()/2,paint);
-        canvas.restore();
-        if(isAnimated) {
-            move();
-            try {
-                Thread.sleep(50);
-                invalidate();
-            }
-            catch (Exception ex) {
+        if(bitmap!=null) {
+            canvas.drawColor(Color.parseColor("#9900BCD4"));
+            canvas.save();
+            canvas.translate(currX, currY);
+            canvas.rotate(deg);
+            canvas.scale(scaleX, scaleY);
+            paint.setStyle(Paint.Style.STROKE);
+            Path path = new Path();
+            path.addCircle(0, 0, bitmap.getWidth() / 2, Path.Direction.CCW);
+            paint.setStrokeWidth(bitmap.getWidth() / 30);
+            canvas.drawPath(path, paint);
+            canvas.clipPath(path);
+            canvas.drawBitmap(bitmap, -bitmap.getWidth() / 2, -bitmap.getHeight() / 2, paint);
+            canvas.restore();
+            if (isAnimated) {
+                move();
+                try {
+                    Thread.sleep(50);
+                    invalidate();
+                } catch (Exception ex) {
 
+                }
             }
         }
     }

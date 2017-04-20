@@ -13,18 +13,23 @@ import java.util.List;
  */
 public class GridView extends View {
     private int time = 0;
+    private GridToCard gridToCard;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private List<Bitmap> bitmaps = new ArrayList<>();
     private int color = Color.parseColor("#FF7043");
+    private int w = 100,h = 100;
     private List<GridBitmap> gridBitmaps = new ArrayList<>();
-    public GridView(Context context) {
+    public GridView(Context context,GridToCard gridToCard) {
         super(context);
+        this.gridToCard = gridToCard;
     }
     public void addImage(Bitmap bitmap) {
         bitmaps.add(bitmap);
     }
     public void onDraw(Canvas canvas) {
-        int w = canvas.getWidth(),h = canvas.getHeight();
+        w = canvas.getWidth();
+        h = canvas.getHeight();
+        canvas.drawColor(color);
         if(time == 0) {
             int gap = w/7,x = 3*gap/2,y = 3*gap/2 ,i = 0;
             for(Bitmap bitmap:bitmaps) {
@@ -46,16 +51,16 @@ public class GridView extends View {
     }
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX(),y = event.getY();
-        Bitmap tappedBitmap = null;
+        GridBitmap tappedBitmap = null;
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             for (GridBitmap gridBitmap : gridBitmaps) {
                 if (gridBitmap.handleTap(x, y)) {
-                    tappedBitmap = gridBitmap.getBitmap();
+                    tappedBitmap = gridBitmap;
                     break;
                 }
             }
             if(tappedBitmap!=null) {
-
+                gridToCard.gridToCard(tappedBitmap.getBitmap(),tappedBitmap.center.x,tappedBitmap.center.y,w/2,h/2);
             }
         }
         return true;
