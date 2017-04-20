@@ -25,7 +25,7 @@ public class CardView extends View {
     }
     public void onDraw(Canvas canvas) {
         if(bitmap!=null) {
-            canvas.drawColor(Color.parseColor("#6600BCD4"));
+            canvas.drawColor(Color.parseColor("#4DB6AC"));
             canvas.save();
             canvas.translate(currX, currY);
             canvas.rotate(deg);
@@ -67,15 +67,20 @@ public class CardView extends View {
             float prevDir = dir;
             dir = 0;
             isAnimated = false;
+
             if(prevDir == -1) {
+                deg = 0;
                 gridToCard.cardToGrid();
+            }
+            else {
+                deg = 360;
             }
         }
     }
-    public void init(Bitmap bitmap,float cx,float cy,int w) {
+    public void init(Bitmap bitmap,float cx,float cy,int w,int h) {
         this.bitmap = Bitmap.createScaledBitmap(bitmap,w,w,true);
         finalX = w;
-        finalY = w;
+        finalY = h;
         initX = cx;
         initY = cy;
         currX = cx;

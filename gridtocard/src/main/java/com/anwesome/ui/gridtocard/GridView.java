@@ -40,6 +40,7 @@ public class GridView extends View {
                 if(i == 3) {
                     x = 3*gap/2;
                     y += 2*gap;
+                    i = 0;
                 }
             }
         }
