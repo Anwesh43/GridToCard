@@ -14,8 +14,8 @@ import android.view.View;
  */
 public class CardView extends View {
     private Bitmap bitmap;
-    private float currX,currY,finalX,finalY,scaleX,scaleY,deg=0,xSpeed = 0,ySpeed = 0,dir = 1,scaleYSpeed = 0,scaleXSpeed=0;
-    private float initX,initY,initSx,initSy;
+    private float currX,currY,finalX,finalY,scale,deg=0,xSpeed = 0,ySpeed = 0,dir = 1, scaleSpeed=0;
+    private float initX,initY,initScale= 0;
     private boolean isAnimated = false;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private GridToCard gridToCard;
@@ -25,12 +25,13 @@ public class CardView extends View {
     }
     public void onDraw(Canvas canvas) {
         if(bitmap!=null) {
-            canvas.drawColor(Color.parseColor("#9900BCD4"));
+            canvas.drawColor(Color.parseColor("#6600BCD4"));
             canvas.save();
             canvas.translate(currX, currY);
             canvas.rotate(deg);
-            canvas.scale(scaleX, scaleY);
+            canvas.scale(scale, scale);
             paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.WHITE);
             Path path = new Path();
             path.addCircle(0, 0, bitmap.getWidth() / 2, Path.Direction.CCW);
             paint.setStrokeWidth(bitmap.getWidth() / 30);
@@ -53,7 +54,7 @@ public class CardView extends View {
         deg+=60*dir;
         currX += xSpeed;
         currY += ySpeed;
-        scaleX += scaleXSpeed;
+        scale += scaleSpeed;
         if((xSpeed>0 && currX>finalX) || (xSpeed<0 && currX<finalX)) {
             currX = finalX;
             xSpeed = 0;
@@ -71,22 +72,19 @@ public class CardView extends View {
             }
         }
     }
-    public void init(Bitmap bitmap,float cx,float cy,int w,int h) {
-        this.bitmap = Bitmap.createScaledBitmap(bitmap,w,h,true);
+    public void init(Bitmap bitmap,float cx,float cy,int w) {
+        this.bitmap = Bitmap.createScaledBitmap(bitmap,w,w,true);
         finalX = w;
-        finalY = h;
+        finalY = w;
         initX = cx;
         initY = cy;
         currX = cx;
         currY = cy;
         xSpeed = (finalX-currX)/6;
         ySpeed = (finalY-currY)/6;
-        initSx = bitmap.getWidth()/(w*1.0f);
-        initSy = bitmap.getHeight()/(h*1.0f);
-        scaleX = initSx;
-        scaleY = initSy;
-        scaleXSpeed = (1-scaleX)/6;
-        scaleYSpeed = (1-scaleY)/6;
+        initScale = bitmap.getWidth()/(w*1.0f);
+        scale = initScale;
+        scaleSpeed = (1-scale)/6;
         dir = 1;
         isAnimated = true;
     }

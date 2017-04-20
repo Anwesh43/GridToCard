@@ -24,7 +24,7 @@ public class GridToCard {
     }
     public void gridToCard(Bitmap bitmap,float x,float y,int w,int h) {
         activity.setContentView(cardView);
-        cardView.init(bitmap,x,y,w,h);
+        cardView.init(bitmap,x,y,w);
     }
     public void cardToGrid() {
         activity.setContentView(gridView);

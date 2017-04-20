@@ -83,11 +83,11 @@ public class GridView extends View {
             canvas.translate(center.x,center.y);
             Path path = new Path();
             path.addCircle(0,0,w/2, Path.Direction.CCW);
-            canvas.clipPath(path);
             paint.setStrokeWidth(w/30);
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
             canvas.drawPath(path,paint);
+            canvas.clipPath(path);
             canvas.drawBitmap(bitmap,-w/2,-h/2,paint);
             canvas.restore();
         }
