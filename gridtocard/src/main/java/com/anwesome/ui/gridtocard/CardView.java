@@ -3,6 +3,9 @@ package com.anwesome.ui.gridtocard;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,15 +17,24 @@ public class CardView extends View {
     private float currX,currY,finalX,finalY,scaleX,scaleY,deg=0,xSpeed = 0,ySpeed = 0,dir = 1,scaleYSpeed = 0,scaleXSpeed=0;
     private float initX,initY,initSx,initSy;
     private boolean isAnimated = false;
+    private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     public CardView(Context context,Bitmap bitmap) {
         super(context);
         this.bitmap = bitmap;
     }
     public void onDraw(Canvas canvas) {
+        canvas.drawColor(Color.parseColor("#9900BCD4"));
         canvas.save();
         canvas.translate(currX,currY);
         canvas.rotate(deg);
         canvas.scale(scaleX,scaleY);
+        paint.setStyle(Paint.Style.STROKE);
+        Path path = new Path();
+        path.addCircle(0,0,bitmap.getWidth()/2, Path.Direction.CCW);
+        paint.setStrokeWidth(bitmap.getWidth()/30);
+        canvas.drawPath(path,paint);
+        canvas.clipPath(path);
+        canvas.drawBitmap(bitmap,-bitmap.getWidth()/2,-bitmap.getHeight()/2,paint);
         canvas.restore();
         if(isAnimated) {
             move();
