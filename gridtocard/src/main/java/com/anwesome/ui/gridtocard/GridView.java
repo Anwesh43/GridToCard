@@ -45,6 +45,19 @@ public class GridView extends View {
         time++;
     }
     public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX(),y = event.getY();
+        Bitmap tappedBitmap = null;
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            for (GridBitmap gridBitmap : gridBitmaps) {
+                if (gridBitmap.handleTap(x, y)) {
+                    tappedBitmap = gridBitmap.getBitmap();
+                    break;
+                }
+            }
+            if(tappedBitmap!=null) {
+
+            }
+        }
         return true;
     }
     private class GridBitmap {
@@ -56,6 +69,9 @@ public class GridView extends View {
             this.center = new Point(x,y);
             w = bitmap.getWidth();
             h = bitmap.getHeight();
+        }
+        public Bitmap getBitmap() {
+            return bitmap;
         }
         public void draw(Canvas canvas) {
             canvas.save();
